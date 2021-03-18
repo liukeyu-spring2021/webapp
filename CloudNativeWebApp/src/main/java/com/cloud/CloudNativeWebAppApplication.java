@@ -19,11 +19,11 @@ import java.io.IOException;
 public class CloudNativeWebAppApplication {
 
 	public static void main(String[] args) throws IOException {
-		DataSourceConfig.username = "root";
-		DataSourceConfig.password = "liukeyu521";
-		DataSourceConfig.hostname = "csye6225-f20.cbcz4zpbrrbg.us-east-1.rds.amazonaws.com";
+		DataSourceConfig.username = System.getenv("user");
+		DataSourceConfig.password = System.getenv("password");
+		DataSourceConfig.hostname = System.getenv("host");
 		//csye6225-f20.cbcz4zpbrrbg.us-east-1.rds.amazonaws.com
-		FileStorageService.S3_BUCKET_NAME ="webapps32";
+		FileStorageService.S3_BUCKET_NAME =System.getenv("bucketname");
 		FileStorageService.region = Region.US_EAST_1;
 		SpringApplication.run(CloudNativeWebAppApplication.class, args);
 	}
