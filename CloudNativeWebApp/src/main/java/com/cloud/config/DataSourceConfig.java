@@ -8,9 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
-    public static String username;
-    public static String password;
-    public static String hostname;
+    public String username = "root";
+    public String password = "liukeyu521";
+    public String hostname = "csye6225-f20.cbcz4zpbrrbg.us-east-1.rds.amazonaws.com";
+
+    public static String Username;
+    public static String Password;
+    public static String Hostname;
     @Bean
     public DataSource dataSource() {
         String url="jdbc:mysql://"+hostname+":3306/"+"db_cloud?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true";
