@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
-
-
     public static String username;
     public static String password;
     public static String hostname;
