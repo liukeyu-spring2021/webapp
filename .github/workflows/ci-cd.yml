@@ -4,8 +4,6 @@
       CODEDEPLOY_APPLICATION_NAME: csye6225-webapp
       CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME: csye6225-webapp-deployment
       AWS_REGION: us-east-1
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     on:
       pull_request:
         branches:
@@ -23,7 +21,7 @@
           with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: us-east-1
+            aws-region: ${{ env.AWS_REGION }}
         
         - name: Set up JDK 1.8
           uses: actions/setup-java@v1
@@ -48,7 +46,7 @@
 
         - name: CodeDeploy API call
           run: |
-              output=$(aws deploy create-deployment --application-name ${{env.CODEDEPLOY_APPLICATION_NAME}} --deployment-group-name ${{env.CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME}} --s3-location bucket=codedeploy.6225csyekeyuliu.me.prod,bundleType=zip,key=webapp.zip --region ${{env.AWS_REGION }} --output json)
+              output=$(aws deploy create-deployment --application-name ${{env.CODEDEPLOY_APPLICATION_NAME}} --deployment-group-name ${{env.CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME}} --s3-location bucket=${{secrets.S3_CODEDEPLOY_BUCKET}},bundleType=zip,key=${{ env.ARTIFACT_NAME }}  --region ${{env.AWS_REGION }} --output json)
 
               echo $output
 
