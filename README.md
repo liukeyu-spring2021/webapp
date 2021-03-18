@@ -12,7 +12,7 @@ Prerequisites:
 1. Install Java
 2. Install MySql
 3. ./mvnw spring-boot:run
-4. ./mvnw :installss
+4. ./mvnw :install
 
 
 
