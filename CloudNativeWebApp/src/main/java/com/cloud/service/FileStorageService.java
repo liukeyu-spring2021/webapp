@@ -40,8 +40,7 @@ public class FileStorageService {
     @Autowired
 
     public static Region region;
-    public static String BUCKET ;
-    public String S3_BUCKET_NAME = "webapps32";
+    public static String S3_BUCKET_NAME;
 
     @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties) {
