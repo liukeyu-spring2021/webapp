@@ -3,8 +3,6 @@ name: pull request check workflow
 on:
   pull_request:
     branches:
-    - main
-    - master
 jobs:
   deploy:
     name: Upload to Amazon S3
