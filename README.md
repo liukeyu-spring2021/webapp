@@ -13,7 +13,6 @@ Prerequisites:
 2. Install MySql
 3. ./mvnw spring-boot:run
 4. ./mvnw :installss
-sssss
 
 
 

@@ -40,10 +40,9 @@ public class CustomerController {
     private FileInfoRepository fileInfoRepository;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
     private UserService userService;
-
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private FileStorageService fileStorageService;
 

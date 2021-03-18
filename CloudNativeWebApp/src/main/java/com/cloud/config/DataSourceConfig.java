@@ -11,6 +11,7 @@ public class DataSourceConfig {
     public static String username;
     public static String password;
     public static String hostname;
+    public static String dbname;
     @Bean
     public DataSource dataSource() {
         String url="jdbc:mysql://"+hostname+":3306/"+"db_cloud?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true";
