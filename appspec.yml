@@ -2,15 +2,15 @@ version: 0.0
 os: linux
 
 files:
-  - source: CloudNativeWebApp/target/CloudNativeWebApp-0.0.1-SNAPSHOT.jar
+  - source: /
     destination: /home/ubuntu
 
 hooks:
   ApplicationStop:
-   - location: ./scripts/StopApplication.sh
+   - location: scripts/StopApplication.sh
      timeout: 180
      runas: ubuntu
   ApplicationStart:
-   - location: ./scripts/StartApplication.sh
+   - location: scripts/StartApplication.sh
      timeout: 180
      runas: ubuntu
