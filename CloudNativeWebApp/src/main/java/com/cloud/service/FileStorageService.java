@@ -37,8 +37,6 @@ public class FileStorageService {
     private final Path fileStorageLocation;
     @Autowired
     private FileInfoRepository fileInfoRepository;
-    @Autowired
-
     public static Region region;
     public static String S3_BUCKET_NAME;
 
