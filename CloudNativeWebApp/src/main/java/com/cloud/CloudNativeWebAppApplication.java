@@ -19,11 +19,6 @@ import java.io.IOException;
 public class CloudNativeWebAppApplication {
 
 	public static void main(String[] args) throws IOException {
-		DataSourceConfig.Username = System.getenv("user");
-		DataSourceConfig.Password = System.getenv("password");
-		DataSourceConfig.Hostname = System.getenv("host");
-		//csye6225-f20.cbcz4zpbrrbg.us-east-1.rds.amazonaws.com
-		FileStorageService.BUCKET =System.getenv("bucketname");
 		FileStorageService.region = Region.US_EAST_1;
 		SpringApplication.run(CloudNativeWebAppApplication.class, args);
 	}
