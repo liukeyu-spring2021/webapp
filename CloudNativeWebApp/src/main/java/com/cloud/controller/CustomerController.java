@@ -172,7 +172,7 @@ public class CustomerController {
 
     }
 
-    @GetMapping(path="/v1/books",produces = "application/json")
+    @GetMapping(path="/v1/mybooks",produces = "application/json")
     public ResponseEntity getAllQuestions() {
 //        Authentication authentication =
 //                SecurityContextHolder.getContext().getAuthentication();
