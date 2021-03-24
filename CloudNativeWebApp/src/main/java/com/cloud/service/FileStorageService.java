@@ -100,7 +100,7 @@ public class FileStorageService {
             fileInfo.setUser_id(userID);
 
 
-
+            fileInfoRepository.save(fileInfo);
             String key=fileInfo.getFile_id();
             client.putObject(PutObjectRequest.builder().bucket(S3_BUCKET_NAME).key(key)
                     .build(), RequestBody.of(file.getBytes()));
@@ -109,7 +109,7 @@ public class FileStorageService {
 
             fileInfo.setSize(view.size());
             deleteFile(fileInfo,userID,billID);
-            fileInfoRepository.save(fileInfo);
+
 
             return fileInfo;
         } catch (IOException | NoSuchAlgorithmException ex) {
