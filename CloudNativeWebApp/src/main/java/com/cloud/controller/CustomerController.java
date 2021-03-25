@@ -1,24 +1,26 @@
-
 package com.cloud.controller;
 
 import com.cloud.service.*;
-import org.apache.catalina.User;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
+import cucumber.api.java.cs.A;
 import org.apache.commons.validator.GenericValidator;
-import org.hibernate.annotations.Parameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import com.cloud.domain.*;
 
-import java.sql.Array;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,18 +40,22 @@ public class CustomerController {
     private BookRepository bookRepository;
     @Autowired
     private FileInfoRepository fileInfoRepository;
-
     @Autowired
     private UserService userService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private StatsDClient statsDClient;
 
 
     @PostMapping(path="/v1/user",produces = "application/json") // Map ONLY POST Requests
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity createUser (@RequestBody userInfo info ) {
+        long startTime = System.nanoTime();
+        log.info("Create user called");
+        statsDClient.incrementCounter("createUser");
         if(info.getPassword()==null||info.getEmail_address()==null||info.getFirst_name()==null||info.getLast_name()==null){
             //System.out.println("1");
             return new ResponseEntity<>(HttpStatus.valueOf(400));
@@ -79,6 +85,9 @@ public class CustomerController {
         }
 
         userService.saveWithEncoder(n);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        statsDClient.recordExecutionTime("CreateUser", duration / 1000000);
         return new ResponseEntity<>(new userInfo_noPwd(n.getId(),n.getFirst_name(),n.getLast_name(),n.getEmailAddress(),n.getAccount_created(),n.getAccount_updated()),HttpStatus.CREATED);
     }
 
@@ -86,12 +95,17 @@ public class CustomerController {
     //Get User Info
     @GetMapping(path="/v1/user/self",produces = "application/json")
     public ResponseEntity getUserInfo (){
+        long startTime = System.nanoTime();
+        log.info("Get user called");
+        statsDClient.incrementCounter("getUserInfo");
       Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
             if(authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
             System.out.println(authentication.getName());
             UserAccount n=userService.findByEmail(authentication.getName());
-
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        statsDClient.recordExecutionTime("getUserInfo", duration / 1000000);
             return new ResponseEntity(new userInfo_noPwd(n.getId(),n.getFirst_name(),n.getLast_name(),n.getEmailAddress(),n.getAccount_created(),n.getAccount_updated()),HttpStatus.OK);
 
 
@@ -101,6 +115,9 @@ public class CustomerController {
     //Update user info
     @PutMapping(path="/v1/user/self",produces = "application/json")
     public ResponseEntity updateUserInfo (@RequestBody UserAccount_v2 n){
+        long startTime = System.nanoTime();
+        log.info("Update user called");
+        statsDClient.incrementCounter("updateUserInfo");
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         //System.out.println(authentication.getName());
@@ -126,6 +143,10 @@ public class CustomerController {
             }
         }catch (Exception e){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }finally {
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("updateUserInfo", duration / 1000000);
         }
         old.setAccount_updated(new Timestamp(System.currentTimeMillis()).toString());
         userService.update(old);
@@ -134,7 +155,9 @@ public class CustomerController {
 
     @PostMapping(path="/v1/books",produces = "application/json") // Map ONLY POST Requests
     public ResponseEntity createBill (@RequestBody BookInfo info ) {
-
+        long startTime = System.nanoTime();
+        log.info("createBill called");
+        statsDClient.incrementCounter("createBook");
             Authentication authentication =
                     SecurityContextHolder.getContext().getAuthentication();
             if (authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
@@ -164,9 +187,17 @@ public class CustomerController {
                 b.setPublished_date(info.getPublished_date());
                 b.setBook_created(new Timestamp(System.currentTimeMillis()).toString());
                 b.setUserId(user.getId());
+                long startTime_1 = System.nanoTime();
                 bookRepository.save(b);
+                long endTime_1 = System.nanoTime();
+                long duration_1 = (endTime_1 - startTime_1);
+                statsDClient.recordExecutionTime("SaveBookQuery", duration_1 / 1000000);
             }catch (Exception e){
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }finally {
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                statsDClient.recordExecutionTime("createBill", duration / 1000000);
             }
             return new ResponseEntity<>(b, HttpStatus.CREATED);
 
@@ -174,13 +205,20 @@ public class CustomerController {
 
     @GetMapping(path="/v1/mybooks",produces = "application/json")
     public ResponseEntity getAllQuestions() {
+        long startTime = System.nanoTime();
+        log.info("getAllBooks called");
+        statsDClient.incrementCounter("getAllBooks");
 //        Authentication authentication =
 //                SecurityContextHolder.getContext().getAuthentication();
 //        System.out.println(authentication.getName());
 //        if(authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
 //        UserAccount user= userService.findByEmail(authentication.getName());
+        long startTime_1 = System.nanoTime();
         Iterable<Book> questions= bookRepository.findAll();
         // This returns a JSON or XML with the users
+        long endTime_1 = System.nanoTime();
+        long duration_1 = (endTime_1 - startTime_1);
+        statsDClient.recordExecutionTime("findAllBillByOwnerIdQuery", duration_1 / 1000000);
         return new ResponseEntity(questions, HttpStatus.valueOf(200));
     }
 
@@ -198,25 +236,38 @@ public class CustomerController {
 
     @GetMapping(path="/v1/books/{id}",produces = "application/json")
     public ResponseEntity getBook(@PathVariable String id) {
+        long startTime = System.nanoTime();
+        log.info("getBill called");
+        statsDClient.incrementCounter("getBill");
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         //System.out.println(authentication.getName());
         if(authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
         UserAccount user=userService.findByEmail(authentication.getName());
+        long startTime_1 = System.nanoTime();
 
             Optional<Book> book = bookRepository.findById(id);
             if(!book.get().getId().equals(id)){
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             }
+        long endTime_1 = System.nanoTime();
+        long duration_1 = (endTime_1 - startTime_1);
+        statsDClient.recordExecutionTime("findAllBillByIdQuery", duration_1 / 1000000);
+
 
         return new ResponseEntity(book,HttpStatus.OK);
     }
 
     @DeleteMapping(path="/v1/books/{id}",produces = "application/json")
     public ResponseEntity deleteQuestion(@PathVariable String id) {
+        long startTime = System.nanoTime();
+        log.info("deletebill called");
+        statsDClient.incrementCounter("deletebill");
+
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         //System.out.println(authentication.getName());
+        try{
         if(authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
         UserAccount user=userService.findByEmail(authentication.getName());
         Book book;
@@ -229,25 +280,38 @@ public class CustomerController {
         catch (Exception e){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+        long startTime_1 = System.nanoTime();
         bookRepository.delete(book);
-
+        long endTime_1 = System.nanoTime();
+        long duration_1 = (endTime_1 - startTime_1);
+        statsDClient.recordExecutionTime("deletebillQuery", duration_1 / 1000000);
         return new ResponseEntity(HttpStatus.valueOf(204));
+        }finally {
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("deletebill", duration / 1000000);
+        }
     }
 
     @PostMapping(path="/v1/books/{id}/image",produces = "application/json") // Map ONLY POST Requests
     private ResponseEntity attachImage(@RequestParam("image") MultipartFile file ,@PathVariable String id){
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-        //System.out.println(authentication.getName());
-        if(authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
-        UserAccount user=userService.findByEmail(authentication.getName());
+        long startTime = System.nanoTime();
+        log.info("updatebill called");
+        statsDClient.incrementCounter("updatebill");
+        try {
+            Authentication authentication =
+                    SecurityContextHolder.getContext().getAuthentication();
+            //System.out.println(authentication.getName());
+            if (authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
+            UserAccount user = userService.findByEmail(authentication.getName());
 
-        Book book = bookRepository.findById(id).get();
+            Book book = bookRepository.findById(id).get();
 
-        if(!book.getUserId().equals(user.getId())){
-            System.out.println("You are not allowed to post image for others' book");
+            if (!book.getUserId().equals(user.getId())) {
+                System.out.println("You are not allowed to post image for others' book");
                 return new ResponseEntity(HttpStatus.valueOf(401));
-        }
+            }
+
 
 //
 //        if (book.getBook_images() != null) return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -259,11 +323,20 @@ public class CustomerController {
 //            return new ResponseEntity(HttpStatus.BAD_REQUEST);
 //        }
 
-        FileInfo fileInfo = fileStorageService.storeFile(file, user.getId(), book.getId());
-        List<FileInfo> list = book.getBook_images() == null ? new ArrayList<>() : book.getBook_images();
-        list.add(fileInfo);
-        bookRepository.save(book);
-        return new ResponseEntity(fileInfo, HttpStatus.valueOf(201));
+            long startTime_1 = System.nanoTime();
+            FileInfo fileInfo = fileStorageService.storeFile(file, user.getId(), book.getId());
+            List<FileInfo> list = book.getBook_images() == null ? new ArrayList<>() : book.getBook_images();
+            list.add(fileInfo);
+            bookRepository.save(book);
+            long endTime_1 = System.nanoTime();
+            long duration_1 = (endTime_1 - startTime_1);
+            statsDClient.recordExecutionTime("SaveBillQuery", duration_1 / 1000000);
+            return new ResponseEntity(fileInfo, HttpStatus.valueOf(201));
+        }finally {
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("updatebill", duration / 1000000);
+        }
     }
 
 //    @GetMapping(path="/v1/question/{questionId}/answer/{answerId}",produces = "application/json")
@@ -281,21 +354,25 @@ public class CustomerController {
 //    }
 //
     @DeleteMapping(path="/v1/books/{bookId}/image/{imageId}",produces = "application/json")
-    private ResponseEntity deleteFile(@PathVariable String bookId, @PathVariable String imageId, HttpServletRequest request){
+    private ResponseEntity deleteFile(@PathVariable String bookId, @PathVariable String imageId, HttpServletRequest request) {
+        long startTime = System.nanoTime();
+        log.info("attachFile called");
+        statsDClient.incrementCounter("attachFile");
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         //System.out.println(authentication.getName());
-        if(authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
+        if (authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
 
         try {
             UserAccount user = userService.findByEmail(authentication.getName());
             Book book = bookRepository.findById(bookId).get();
-            List<FileInfo> list =  book.getBook_images();
+            List<FileInfo> list = book.getBook_images();
             FileInfo info = fileInfoRepository.findById(imageId).get();
 
             if (!book.getUserId().equals(user.getId())) {
                 return new ResponseEntity(HttpStatus.valueOf(401));
             }
+            long startTime_1 = System.nanoTime();
 
 
 //            fileStorageService.deleteFile(info, user.getId(), book.getId());
@@ -304,11 +381,18 @@ public class CustomerController {
             book.setBook_images(list);
             bookRepository.save(book);
             fileInfoRepository.delete(info);
+            long endTime_1 = System.nanoTime();
+            long duration_1 = (endTime_1 - startTime_1);
+            statsDClient.recordExecutionTime("SaveBillQuery", duration_1 / 1000000);
             System.out.println("answer in question deleted");
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(HttpStatus.valueOf(400));
+        } finally {
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            statsDClient.recordExecutionTime("attachFile", duration / 1000000);
         }
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
 
 
     }
