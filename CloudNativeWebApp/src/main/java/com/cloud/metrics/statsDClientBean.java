@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component;
 public class statsDClientBean {
     @Bean
     StatsDClient getStatsDClient(){
-        return new NonBlockingStatsDClient("http", "", 8125);
+        return new NonBlockingStatsDClient("csye6225", "", 8125);
     }
 }
