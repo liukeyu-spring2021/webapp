@@ -156,7 +156,7 @@ public class CustomerController {
     @PostMapping(path="/v1/books",produces = "application/json") // Map ONLY POST Requests
     public ResponseEntity createBill (@RequestBody BookInfo info ) {
         long startTime = System.nanoTime();
-        log.info("createBill called");
+        log.info("create Book called");
         statsDClient.incrementCounter("createBook");
             Authentication authentication =
                     SecurityContextHolder.getContext().getAuthentication();
@@ -218,7 +218,7 @@ public class CustomerController {
         // This returns a JSON or XML with the users
         long endTime_1 = System.nanoTime();
         long duration_1 = (endTime_1 - startTime_1);
-        statsDClient.recordExecutionTime("findAllBillByOwnerIdQuery", duration_1 / 1000000);
+        statsDClient.recordExecutionTime("findAllBookByOwnerIdQuery", duration_1 / 1000000);
         return new ResponseEntity(questions, HttpStatus.valueOf(200));
     }
 
@@ -261,8 +261,8 @@ public class CustomerController {
     @DeleteMapping(path="/v1/books/{id}",produces = "application/json")
     public ResponseEntity deleteQuestion(@PathVariable String id) {
         long startTime = System.nanoTime();
-        log.info("deletebill called");
-        statsDClient.incrementCounter("deletebill");
+        log.info("delete Book called");
+        statsDClient.incrementCounter("delete book");
 
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -284,20 +284,20 @@ public class CustomerController {
         bookRepository.delete(book);
         long endTime_1 = System.nanoTime();
         long duration_1 = (endTime_1 - startTime_1);
-        statsDClient.recordExecutionTime("deletebillQuery", duration_1 / 1000000);
+        statsDClient.recordExecutionTime("deleteBookQuery", duration_1 / 1000000);
         return new ResponseEntity(HttpStatus.valueOf(204));
         }finally {
             long endTime = System.nanoTime();
             long duration = (endTime - startTime);
-            statsDClient.recordExecutionTime("deletebill", duration / 1000000);
+            statsDClient.recordExecutionTime("deleteBook", duration / 1000000);
         }
     }
 
     @PostMapping(path="/v1/books/{id}/image",produces = "application/json") // Map ONLY POST Requests
     private ResponseEntity attachImage(@RequestParam("image") MultipartFile file ,@PathVariable String id){
         long startTime = System.nanoTime();
-        log.info("updatebill called");
-        statsDClient.incrementCounter("updatebill");
+        log.info("upload images called");
+        statsDClient.incrementCounter("upload images call");
         try {
             Authentication authentication =
                     SecurityContextHolder.getContext().getAuthentication();
@@ -330,12 +330,12 @@ public class CustomerController {
             bookRepository.save(book);
             long endTime_1 = System.nanoTime();
             long duration_1 = (endTime_1 - startTime_1);
-            statsDClient.recordExecutionTime("SaveBillQuery", duration_1 / 1000000);
+            statsDClient.recordExecutionTime("Save books Query", duration_1 / 1000000);
             return new ResponseEntity(fileInfo, HttpStatus.valueOf(201));
         }finally {
             long endTime = System.nanoTime();
             long duration = (endTime - startTime);
-            statsDClient.recordExecutionTime("updatebill", duration / 1000000);
+            statsDClient.recordExecutionTime("upload image", duration / 1000000);
         }
     }
 
