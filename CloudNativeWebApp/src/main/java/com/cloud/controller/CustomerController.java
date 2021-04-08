@@ -270,11 +270,6 @@ public class CustomerController {
         long startTime = System.nanoTime();
         log.info("getBill called");
         statsDClient.incrementCounter("getBill");
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-        //System.out.println(authentication.getName());
-        if(authentication.getName().equals("anonymousUser")) return new ResponseEntity(HttpStatus.valueOf(401));
-        UserAccount user=userService.findByEmail(authentication.getName());
         long startTime_1 = System.nanoTime();
 
             Optional<Book> book = bookRepository.findById(id);
