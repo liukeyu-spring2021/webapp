@@ -27,6 +27,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
 import software.amazon.awssdk.auth.InstanceProfileCredentialsProvider;
+import software.amazon.awssdk.services.sns.SNSClient;
+import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sqs.SQSClient;
 import software.amazon.awssdk.services.sqs.model.*;
 
@@ -63,6 +65,11 @@ public class CustomerController {
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
+
+    SNSClient snsClient = SNSClient.builder()
+            .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
+            .region(pathVariableConfig.region)
+            .build();
 
     @PostMapping(path="/v1/user",produces = "application/json") // Map ONLY POST Requests
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -213,25 +220,28 @@ public class CustomerController {
                 long duration = (endTime - startTime);
                 statsDClient.recordExecutionTime("createBill", duration / 1000000);
             }
-
-        Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
-        messageAttributes.put("Name", MessageAttributeValue.builder()
-                .dataType("String")
-                .stringValue(user.getEmailAddress())
-                .build());
-        messageAttributes.put("Days", MessageAttributeValue.builder()
-                .dataType("String")
-                .stringValue(""+"yyyy-MM-dd")
-                .build());
-        SQSClient sqsClient = SQSClient.builder()
-                .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
-                .region(pathVariableConfig.region)
-                .build();
-        sqsClient.sendMessage(SendMessageRequest.builder()
-                .queueUrl(pathVariableConfig.queueUrl)
-                .messageBody("Create Book"+","+b.getId()+","+b.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
-                .delaySeconds(10)
-                .build());
+            PublishRequest request = PublishRequest.builder()
+                    .message("Create Book"+","+b.getId()+","+b.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
+                    .build();
+            snsClient.publish(request);
+//        Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
+//        messageAttributes.put("Name", MessageAttributeValue.builder()
+//                .dataType("String")
+//                .stringValue(user.getEmailAddress())
+//                .build());
+//        messageAttributes.put("Days", MessageAttributeValue.builder()
+//                .dataType("String")
+//                .stringValue(""+"yyyy-MM-dd")
+//                .build());
+//        SQSClient sqsClient = SQSClient.builder()
+//                .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
+//                .region(pathVariableConfig.region)
+//                .build();
+//        sqsClient.sendMessage(SendMessageRequest.builder()
+//                .queueUrl(pathVariableConfig.queueUrl)
+//                .messageBody("Create Book"+","+b.getId()+","+b.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
+//                .delaySeconds(10)
+//                .build());
 
             return new ResponseEntity<>(b, HttpStatus.CREATED);
 
@@ -320,26 +330,30 @@ public class CustomerController {
         long endTime_1 = System.nanoTime();
         long duration_1 = (endTime_1 - startTime_1);
         statsDClient.recordExecutionTime("deleteBookQuery", duration_1 / 1000000);
+        PublishRequest request = PublishRequest.builder()
+                .message("Delete Book"+","+book.getId()+","+book.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
+                .targetArn("arn:aws:sns:us-east-1:359410113455:Topic")
+                .build();
+        snsClient.publish(request);
 
-            Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
-            messageAttributes.put("Name", MessageAttributeValue.builder()
-                    .dataType("String")
-                    .stringValue(user.getEmailAddress())
-                    .build());
-            messageAttributes.put("Days", MessageAttributeValue.builder()
-                    .dataType("String")
-                    .stringValue(""+"yyyy-MM-dd")
-                    .build());
-            SQSClient sqsClient = SQSClient.builder()
-                    .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
-                    .region(pathVariableConfig.region)
-                    .build();
-            sqsClient.sendMessage(SendMessageRequest.builder()
-                    .queueUrl(pathVariableConfig.queueUrl)
-                    .messageBody("Delete Book"+","+book.getId()+","+book.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
-                    .delaySeconds(10)
-                    .build());
-
+//            Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
+//            messageAttributes.put("Name", MessageAttributeValue.builder()
+//                    .dataType("String")
+//                    .stringValue(user.getEmailAddress())
+//                    .build());
+//            messageAttributes.put("Days", MessageAttributeValue.builder()
+//                    .dataType("String")
+//                    .stringValue(""+"yyyy-MM-dd")
+//                    .build());
+//            SQSClient sqsClient = SQSClient.builder()
+//                    .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
+//                    .region(pathVariableConfig.region)
+//                    .build();
+//            sqsClient.sendMessage(SendMessageRequest.builder()
+//                    .queueUrl(pathVariableConfig.queueUrl)
+//                    .messageBody("Delete Book"+","+book.getId()+","+book.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
+//                    .delaySeconds(10)
+//                    .build());
         return new ResponseEntity(HttpStatus.valueOf(204));
         }finally {
             long endTime = System.nanoTime();
