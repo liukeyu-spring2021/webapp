@@ -32,9 +32,9 @@ public class CloudNativeWebAppApplication {
 		DataSourceConfig.hostname = "csye6225-f20.cbcz4zpbrrbg.us-east-1.rds.amazonaws.com";
 		FileStorageService.S3_BUCKET_NAME ="webapps32";
 		FileStorageService.region = Region.US_EAST_1;
-		pathVariableConfig.queueUrl= "https://sqs.us-east-1.amazonaws.com/359410113455/myQueue.fifo";
+		pathVariableConfig.queueUrl= "https://sqs.us-east-1.amazonaws.com/359410113455/Queue";
 		pathVariableConfig.region= Region.US_EAST_2;
-		pathVariableConfig.topicArn = "arn:aws:sns:us-east-1:359410113455:myTopic.fifo";
+		pathVariableConfig.topicArn = "arn:aws:sns:us-east-1:359410113455:Topic";
 
 		Runnable r = () -> {
 			SQSClient sqsClient = SQSClient.builder()
