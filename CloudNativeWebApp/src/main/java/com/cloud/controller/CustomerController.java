@@ -1,12 +1,7 @@
 package com.cloud.controller;
 
 import com.cloud.service.*;
-import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
-import cucumber.api.java.cs.A;
-import org.apache.commons.validator.GenericValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,23 +16,12 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 
 import software.amazon.awssdk.auth.InstanceProfileCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SNSClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
-import software.amazon.awssdk.services.sqs.SQSClient;
-import software.amazon.awssdk.services.sqs.model.*;
 
-import com.cloud.config.pathVariableConfig;
-
-
-import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,10 +49,11 @@ public class CustomerController {
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
-
+    Region region= Region.US_EAST_1;
+    String topicArn = "arn:aws:sns:us-east-1:359410113455:Topic";
     SNSClient snsClient = SNSClient.builder()
             .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
-            .region(pathVariableConfig.region)
+            .region(region)
             .build();
 
     @PostMapping(path="/v1/user",produces = "application/json") // Map ONLY POST Requests
@@ -222,6 +207,7 @@ public class CustomerController {
             }
             PublishRequest request = PublishRequest.builder()
                     .message("Create Book"+","+b.getId()+","+b.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
+                    .topicArn(topicArn)
                     .build();
             snsClient.publish(request);
 //        Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
@@ -332,7 +318,7 @@ public class CustomerController {
         statsDClient.recordExecutionTime("deleteBookQuery", duration_1 / 1000000);
         PublishRequest request = PublishRequest.builder()
                 .message("Delete Book"+","+book.getId()+","+book.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
-                .targetArn("arn:aws:sns:us-east-1:359410113455:Topic")
+                .targetArn(topicArn)
                 .build();
         snsClient.publish(request);
 
