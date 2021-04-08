@@ -336,7 +336,7 @@ public class CustomerController {
                     .build();
             sqsClient.sendMessage(SendMessageRequest.builder()
                     .queueUrl(pathVariableConfig.queueUrl)
-                    .messageBody("Create Book"+","+book.getId()+","+book.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
+                    .messageBody("Delete Book"+","+book.getId()+","+book.getTitle()+","+user.getLast_name()+" "+user.getFirst_name()+","+user.getEmailAddress())
                     .delaySeconds(10)
                     .build());
 
