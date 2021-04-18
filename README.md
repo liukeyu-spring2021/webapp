@@ -39,9 +39,9 @@ Tools:
 - Github actions
 - JMeter
 
-<a href="Overall Design Diagram"><img src="https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png" align="left" height="250" width="300" ></a>
+<a href="https://github.com/liukeyu-spring2021/webapp/blob/main/doc/Diagram.png"><img src="https://github.com/liukeyu-spring2021/webapp/blob/main/doc/Diagram.png" align="left" height="250" width="300" ></a>
 See more details:
 
-- Design:  [doc/design.md](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/design.md)
-- Version: [doc/version.md](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/version.md)
-- Command: [doc/command.md](https://github.com/liukeyu-spring2021/webapp/tree/maindoc/command.md)
+- Design:  [doc/design.md](https://github.com/liukeyu-spring2021/webapp/blob/main/doc/design.md)
+- Version: [doc/version.md](https://github.com/liukeyu-spring2021/webapp/blob/main/doc/version.md)
+- Command: [doc/command.md](https://github.com/liukeyu-spring2021/webapp/blob/maindoc/command.md)
