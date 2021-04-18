@@ -7,7 +7,7 @@ Webapp is a Books Management System (BMS) web application, which includes:
 - connections between client and load balancer / EC2 and rds are secured by AWS certificate manager with certification from CA 
 - All components with contains sensitive date like EBS and RDS are encrypted by key in AWS KMS
 - use https to visit domain(https://(prod/dev).6225csyekeyuliu.me)
-- creates log/metric in cloudwatch
+- Webapp and lambda function will create log/metric in cloudwatch
 
 The webapp can:
 - trigger ci to build and test the application
