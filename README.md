@@ -16,33 +16,34 @@ Prerequisites:
 
 Stack used:
 
-Java
-Spring-boot
-awssdk package
-Maven
-Components on AWS used:
+- Java
+- Spring-boot
+- awssdk package
+- Maven
 
-EC2 Instances, Security Groups, AMI, Auto Scaling, Load balaner
-Rds
-DynamoDB
-S3
-CloudWatch
-VPC
-CodeDeploy
-Route53
-Lambda
-SNS
-SES
-Certificate Manager
+Components on AWS used:
+- EC2 Instances, Security Groups, AMI, Auto Scaling, Load balaner
+- Rds
+- DynamoDB
+- S3
+- CloudWatch
+- VPC
+- CodeDeploy
+- Route53
+- Lambda
+- SNS
+- SES
+- Certificate Manager
 
 Tools:
+- Github actions
+- JMeter
 
-Github actions
-JMeter
+
 
 Overall Design Diagram
 
-![Alt text](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png?raw=true "Title")
+- ![Alt text](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png?raw=true "Title")
 
 See more details:
 
