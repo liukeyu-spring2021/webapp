@@ -42,7 +42,7 @@ JMeter
 
 Overall Design Diagram
 
-![alt text](https://www.processon.com/embed/607af82fe401fd2d66a2a0fd)
+![Alt text](doc/Design Diagram.png?raw=true "Title")
 
 See more details:
 
