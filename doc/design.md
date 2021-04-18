@@ -1,4 +1,4 @@
-Webapp is a blog web application, which includes:
+Webapp is a Books Management System (BMS) web application, which includes:
 - create/update/delete users with user information(name, email, password, etc)
 - authorized users are able to create/update/delete books and images of books
 - users will receive emails if the books under their name is created, updated or deleted
