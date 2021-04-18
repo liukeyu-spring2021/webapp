@@ -42,10 +42,10 @@ JMeter
 
 Overall Design Diagram
 
-![Alt text](https://github.com/liukeyu-spring2021/webapp/blob/master/doc/Diagram.png?raw=true "Title")
+![Alt text](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png?raw=true "Title")
 
 See more details:
 
-- Design:  [doc/design.md](https://github.com/liukeyu-spring2021/webapp/blob/master/doc/design.md)
-- Version: [doc/version.md](https://github.com/liukeyu-spring2021/webapp/blob/master/doc/version.md)
-- Command: [doc/command.md](https://github.com/liukeyu-spring2021/webapp/blob/master/doc/command.md)
+- Design:  [doc/design.md](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/design.md)
+- Version: [doc/version.md](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/version.md)
+- Command: [doc/command.md](https://github.com/liukeyu-spring2021/webapp/tree/maindoc/command.md)
