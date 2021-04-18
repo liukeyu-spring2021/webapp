@@ -39,9 +39,7 @@ Tools:
 - Github actions
 - JMeter
 
-
-- ![Overall Design Diagram](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png = 250x250)
-
+<a href="Overall Design Diagram"><img src="https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png" align="left" height="250" width="300" ></a>
 See more details:
 
 - Design:  [doc/design.md](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/design.md)
