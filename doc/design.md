@@ -4,7 +4,7 @@ Webapp is a Books Management System (BMS) web application, which includes:
 - users will receive emails if the books under their name are created, updated or deleted
 - use DynamoDB to store the message published on SNS and sent to users by SES to avoid sending duplicate emails
 - auto scaling groups to scale out/in according to CPU utilization
-- connections between client and load balancer / EC2 and rds are secured by AWS certificate manager with certification from CA 
+- connections between client and load balancer by AWS certificate manager with certification from CA / EC2 and rds are secured by AWS certificate manager with certification from AWS
 - All components with contains sensitive date like EBS and RDS are encrypted by key in AWS KMS
 - use https to visit domain(https://(prod/dev).6225csyekeyuliu.me)
 - Webapp and lambda function will create log/metric in cloudwatch
