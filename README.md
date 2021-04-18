@@ -40,10 +40,7 @@ Tools:
 - JMeter
 
 
-
-
-
-- ![Overall Design Diagram](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png?raw=true "Title")
+- ![Overall Design Diagram](https://www.processon.com/view/link/607b8ba007912936888e2446)
 
 See more details:
 
