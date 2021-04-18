@@ -1,7 +1,7 @@
 Webapp is a Books Management System (BMS) web application, which includes:
 - create/update/delete users with user information(name, email, password, etc)
 - authorized users are able to create/update/delete books and images of books
-- users will receive emails if the books under their name is created, updated or deleted
+- users will receive emails if the books under their name are created, updated or deleted
 - use DynamoDB to store the message published on SNS and sent to users by SES to avoid sending duplicate emails
 - auto scaling groups to scale out/in according to CPU utilization
 - connections between client and load balancer / EC2 and rds are secured by AWS certificate manager with certification from CA 
