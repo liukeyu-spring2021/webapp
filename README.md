@@ -41,9 +41,9 @@ Tools:
 
 
 
-Overall Design Diagram
 
-- ![Alt text](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png?raw=true "Title")
+
+- ![Overall Design Diagram](https://github.com/liukeyu-spring2021/webapp/tree/main/doc/Diagram.png?raw=true "Title")
 
 See more details:
 
