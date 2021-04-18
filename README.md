@@ -42,7 +42,7 @@ JMeter
 
 Overall Design Diagram
 
-![Alt text](https://github.com/liukeyu-spring2021/webapp/blob/master/doc/Design Diagram.png?raw=true "Title")
+![Alt text](https://github.com/liukeyu-spring2021/webapp/blob/master/doc/Diagram.png?raw=true "Title")
 
 See more details:
 
