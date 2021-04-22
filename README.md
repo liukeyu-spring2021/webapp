@@ -41,7 +41,7 @@ Tools:
 
 Design Diagram
 - <a href="https://github.com/liukeyu-spring2021/webapp/blob/main/doc/Diagram.png"><img src="https://github.com/liukeyu-spring2021/webapp/blob/main/doc/Diagram.png" align="left" height="279" width="250" ></a>
-- Original Diagram:  [processon](https://www.processon.com/view/link/607b8ba007912936888e2446)
+- Original Diagram:  [Processon shared document](https://www.processon.com/view/link/607b8ba007912936888e2446)
 
 See more details:
 
